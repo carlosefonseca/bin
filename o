@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+# opens the current dir in Finder
+
+if [[ $# -gt 0 ]]; then
+    open $1
+else
+    open .
+fi
