@@ -95,7 +95,7 @@ end
 if new_space == original_space
   puts 'No change in used space.'
 elsif new_space < original_space
-  puts "Decreased used space from  #{size_to_s(original_space)} to #{size_to_s(new_space)} (#{size_to_s(new_space-original_space)})"
+  puts "Decreased used space from  #{size_to_s(original_space)} to #{size_to_s(new_space)} (#{size_to_s(new_space-original_space)}) (#{(1.0*new_space/original_space*100.0).round(1)}%)"
 else
   puts "INCREASED!!?!?!?!?!?! used space from  #{size_to_s(original_space)} to #{size_to_s(new_space)} (#{size_to_s(new_space-original_space)})"
 end
