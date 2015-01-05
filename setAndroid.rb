@@ -3,9 +3,9 @@
 =begin
 
 Processes the output of `adb devices` to be more user and machine friendly.
-Can be used to verbosely list devices (device model, API version, brand) and to output a device id.
-It can't set the ANDROID_SERIAL environment variable to be then used by adb, but can be included in an environment
-function that does that. Here's what I use in by bash script:
+Can be used to verbosely list devices (device manufacturer, model, API version) and to output a specific device id.
+It can't set the ANDROID_SERIAL environment variable to be then used by adb, but can be included in an bash
+function that does that. Here's what I use in by bash profile:
 
 setandroid() {
     # print device list
@@ -40,10 +40,12 @@ help = (ARGV.length > 0 and ARGV[0].include? 'help')
 input = ARGV[0] == 'ask'
 
 if help
-  puts 'Call with no arguments for verbose and indexed device list.'
-  puts 'Call with a number to return the device id referring to that index.'
-  puts 'Call with \'simple\' to return a list of device ids.'
-  puts 'Call with \'ask\' to ask for a device id that will then be outputted (but not stored).'
+  puts "Usage: %s [<number>|simple|ask|help]" % File.basename($0)
+  puts '- no arguments:  verbose and indexed device list.'
+  puts '- a number:      returns the device id referring to that index.'
+  puts '- \'simple\':      returns a simple list of device ids.'
+  puts '- \'ask\':         prints the device list, asks for an index and prints the respective device id.'
+  puts '- \'help\':        i guess you already know what this does.'
   exit
 end
 
