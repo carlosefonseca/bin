@@ -3,25 +3,33 @@
 =begin
 
 Processes the output of `adb devices` to be more user and machine friendly.
-Can be used to verbosely list devices and to output a device id.
+Can be used to verbosely list devices (device model, API version, brand) and to output a device id.
 It can't set the ANDROID_SERIAL environment variable to be then used by adb, but can be included in an environment
 function that does that. Here's what I use in by bash script:
 
-setandroid {
-  # print device list
-  setAndroid.rb
-  # get device count
-  n=$(setAndroid.rb simple | wc -l)
-  if [ $n -eq 1 ]; then
-    # if only one device, does not ask user
-    number=1
-  else
-    # if more than one device, ask the user for which one
-    read -p "Device: " number
-  fi
-  # stores and prints the exported device id
-  export ANDROID_SERIAL=$(setAndroid.rb ${number})
-  env | grep ANDROID_SERIAL
+setandroid() {
+    # print device list
+    setAndroid.rb
+    # get device count
+    n=$(setAndroid.rb simple | wc -l)
+    if [ $n -eq 1 ]; then
+        # if only one device, does not ask user
+        number=1
+    else
+        # if more than one device, ask the user for which one
+        read -p "Device: " number
+    fi
+
+    # if is number and within range
+    if [[ "$number" =~ ^[0-9]+$ ]] && [ "$number" -ge 1 -a "$number" -le $n ]; then
+        # obtains the device id, stores in env
+        export ANDROID_SERIAL=$(setAndroid.rb ${number})
+        # prints the current env
+        env | grep ANDROID_SERIAL
+        return 0
+    fi
+    echo "invalid"
+    return 1
 }
 
 =end
@@ -62,6 +70,7 @@ if index == 0
     {
         :addr => x,
         :brand => `adb -s #{x} shell getprop ro.product.brand`.strip!,
+        :manufacturer => `adb -s #{x} shell getprop ro.product.manufacturer`.strip!,
         :model => `adb -s #{x} shell getprop ro.product.model`.strip!,
         :release => `adb -s #{x} shell getprop ro.build.version.release`.strip!,
         :sdk => `adb -s #{x} shell getprop ro.build.version.sdk`.strip!
@@ -69,7 +78,7 @@ if index == 0
   }
 
   y.each_with_index { |d, i|
-    puts '%2d) %-15.15s  %-22s  %-5s %4s %10s' % [i+1, d[:model], d[:addr], d[:release], "(#{d[:sdk]})", d[:brand]]
+    puts '%2d) %-25.25s  %-22s  %-5s %4s' % [i+1, d[:manufacturer]+" "+d[:model], d[:addr], d[:release], "(#{d[:sdk]})"]
   }
 
 
