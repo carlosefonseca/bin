@@ -72,7 +72,7 @@ key="Push$APP${camel}Key.pem"
 echo -e "$ openssl x509 -in $apscer -inform der -out $cert"
 openssl x509 -in $apscer -inform der -out $cert
 
-echo -e "\n$ openssl pkcs12 -nocerts -out $key -in $p12 -passin pass:$PW -passout pass:x"
+echo -e "\n$ openssl pkcs12 -nocerts -out $key -in $p12 -passin pass:x -passout pass:x"
 openssl pkcs12 -nocerts -out $key -in $p12 -passin pass:$PW -passout pass:$PW
 
 echo -e "\n$ cat $cert $key > ${shortsmall}_ck.pem"
